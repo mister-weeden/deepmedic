@@ -25,7 +25,7 @@ from deepmedic.frontEnd.testSession import TestSession
 
 from deepmedic.frontEnd.configParsing.modelParams import ModelParameters
 
-from tensorflow.python.client import device_lib
+import tensorflow as tf
 
 
 OPT_MODEL = "-model"
@@ -160,7 +160,11 @@ if __name__ == '__main__':
     
     check_dev_passed_correctly(args.device)
     (sess_device) = set_environment(args.device)
-    log.print3("Available devices to Tensorflow:\n" + str(device_lib.list_local_devices()))
+    try:
+        devices = tf.config.list_physical_devices()
+        log.print3("Available devices to Tensorflow:\n" + str(devices))
+    except Exception as e:
+        log.print3("Available devices to Tensorflow: (could not query) " + str(e))
     
     try:
         #Find out what session we are being asked to perform:
@@ -186,4 +190,3 @@ if __name__ == '__main__':
         
     log.print3("Finished.")
     
-
